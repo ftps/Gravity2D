@@ -1,10 +1,10 @@
 TARGET = exe
 CC = g++
-LIBS = -lm -lboost_system -lboost_filesystem -lboost_iostreams
+LIBS = -lm
 HEAD = ./Headers
 SRCS = ./Sources
 INCDIR = -I$(HEAD)
-CFLAGS = -Wall -ggdb3 -pedantic -std=c++17 -funroll-loops $(INCDIR)
+CFLAGS = -Wall -std=c++17 -funroll-loops $(INCDIR)
 .PHONY: clean
 
 DEPS = $(wildcard $(HEAD)/*.hpp)
