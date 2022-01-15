@@ -10,6 +10,10 @@ body::body()
     bodyShape.setFillColor(color);
 
 
+    // Set body graphical atributes
+    bodyShape.setRadius(radius);
+    bodyShape.setPointCount(radius * 30);
+
 
 
 }
