@@ -1,6 +1,6 @@
 TARGET = exe
 CC = g++
-LIBS = -lm
+LIBS = -lm -lsfml-graphics -lsfml-window -lsfml-system
 HEAD = ./Headers
 SRCS = ./Sources
 INCDIR = -I$(HEAD)
