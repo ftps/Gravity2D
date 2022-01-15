@@ -4,29 +4,17 @@
 #include <vector>
 #include <SFML/Graphics.hpp>
 
-class body{
+class Body{
+    public:
+        Body();
+    private:
+        // Physics variables
+        double mass;
+        double radius;
+        
 
-
-private:
-
-    // Physics variables
-    double mass;
-    double radius;
-    
-
-    // Drawing variables
-    sf::CircleShape bodyShape; 
-
-
-
-
-
-
-
-public:
-
-    body();
-
+        // Drawing variables
+        sf::CircleShape bodyShape;
 };
 
 

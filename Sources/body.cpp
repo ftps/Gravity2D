@@ -2,9 +2,8 @@
 
 
 
-body::body()
+Body::Body()
 {
-
     // Random color of body
     sf::Color color(rand() % 255 + 1,rand() % 255 + 1,rand() % 255 + 1, 255);
     bodyShape.setFillColor(color);
@@ -13,7 +12,4 @@ body::body()
     // Set body graphical atributes
     bodyShape.setRadius(radius);
     bodyShape.setPointCount(radius * 30);
-
-
-
 }
