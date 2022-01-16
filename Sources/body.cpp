@@ -4,8 +4,7 @@
 
 Body::Body()
 {
-    // Random color of body --> Tem um erro, está sempre a far as mesmas cores para corpos diferentes. Será o codigo demasiado rapido para a seed??
-    srand(time(0));
+    // Random color of body
     sf::Color color(rand() % 256,rand() % 256,rand() % 256, 255);
     bodyShape.setFillColor(color);
 

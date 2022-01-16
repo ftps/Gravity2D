@@ -16,6 +16,8 @@ int main(int argc, char* argv[])
 {
     std::cout << "Hello Cringelord" << std::endl;
 
+    srand(time(0)); // Seeder for random color
+
     // Codigo da janela. Descomentar para abrir a janela.
 
     // screen_atributes screen(800,800);

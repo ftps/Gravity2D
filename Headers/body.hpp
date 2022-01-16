@@ -4,7 +4,7 @@
 #include <vector>
 #include <SFML/Graphics.hpp>
 
-class Body : public sf::Drawable, sf::Transformable{
+class Body : public sf::Drawable, public sf::Transformable{
     public:
         Body(); // dps temos de pôr o constructor a receber coisas ou fazer múltiplos
         virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const; // funçao para puder usar o window.draw() no main
