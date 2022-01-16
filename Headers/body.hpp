@@ -4,15 +4,18 @@
 #include <vector>
 #include <SFML/Graphics.hpp>
 
-class Body : public sf::Drawable, public sf::Transformable{     // Ele tem de ter estas heranças senão não dá pra brincar com o corpo graficamente aka metodos como setPosition, setRotation etc. Apaga o comentario depois de ler se quiseres.
+class Body : public sf::Drawable, sf::Transformable{
     public:
-        Body();
+        Body(); // dps temos de pôr o constructor a receber coisas ou fazer múltiplos
         virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const; // funçao para puder usar o window.draw() no main
 
     private:
         // Physics variables
         double mass;
         double radius;
+
+        sf::Vector2f x; // position
+        sf::Vector2f v; // velocity
         
 
         // Drawing variables
