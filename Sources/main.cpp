@@ -18,46 +18,46 @@ int main(int argc, char* argv[])
 
     srand(time(0)); // Seeder for random color
 
-    // Codigo da janela. Descomentar para abrir a janela.
+    //Codigo da janela. Descomentar para abrir a janela.
 
-    // screen_atributes screen(800,800);
-    // sf::RenderWindow window(sf::VideoMode(screen.screen_width,screen.screen_height,screen.modeBitsPerPixel), "Gravity2D");
+    screen_atributes screen(800,800);
+    sf::RenderWindow window(sf::VideoMode(screen.screen_width,screen.screen_height,screen.modeBitsPerPixel), "Gravity2D");
 
-    // while (window.isOpen()){
-    //     // check all the window's events that were triggered since the last iteration of the loop
-    //     sf::Event event;
-    //     while (window.pollEvent(event)){
+    while (window.isOpen()){
+        // check all the window's events that were triggered since the last iteration of the loop
+        sf::Event event;
+        while (window.pollEvent(event)){
 
-    //         // "close requested" event: we close the window
-    //         if (event.type == sf::Event::Closed)
-    //             window.close();
-    //         if (event.type == sf::Event::KeyPressed)
-    //             if (event.key.code == sf::Keyboard::Escape)
-    //                 window.close();
-    //         if (event.type == sf::Event::Resized){
-    //             // update the view to the new size of the window
-    //             sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
-    //             window.setView(sf::View(visibleArea));
-    //         }
+            // "close requested" event: we close the window
+            if (event.type == sf::Event::Closed)
+                window.close();
+            if (event.type == sf::Event::KeyPressed)
+                if (event.key.code == sf::Keyboard::Escape)
+                    window.close();
+            if (event.type == sf::Event::Resized){
+                // update the view to the new size of the window
+                sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
+                window.setView(sf::View(visibleArea));
+            }
             
-    //     }
+        }
 
-    //     //Update stuff
+        //Update stuff
 
 
 
 
 
     
-    //     // clear the window with black color
-    //     window.clear(sf::Color::Black);
+         // clear the window with black color
+         window.clear(sf::Color::Black);
 
-    //     // draw everything here...
+         // draw everything here...
 
 
-    //     // end the current frame
-    //     window.display();
-    // }
+         // end the current frame
+         window.display();
+    }
 
     return 0;
 }

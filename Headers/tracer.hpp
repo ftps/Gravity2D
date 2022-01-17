@@ -8,12 +8,12 @@ class Tracer
 {
 public:
 
-    void update(const sf::Shape& shape,const size_t& maxTrailSize, const size_t& dt);
+    void update(const sf::Shape& shape,const size_t& maxTrailSize);
     sf::Vertex* getData();
     size_t getSize(); 
 
 private:
-
+    //sf::Vector2f
     std::vector<sf::Vertex> vertexVector; 
 
 

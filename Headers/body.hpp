@@ -6,16 +6,16 @@
 
 class Body : public sf::Drawable, public sf::Transformable{
     public:
-        Body(); // dps temos de pôr o constructor a receber coisas ou fazer múltiplos
+        Body(const double& mass, const double& radius); // dps temos de pôr o constructor a receber coisas ou fazer múltiplos
         virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const; // funçao para puder usar o window.draw() no main
 
-    private:
+    public:
         // Physics variables
-        double mass;
-        double radius;
+        const double mass;
+        const double radius;
 
-        sf::Vector2f x; // position
-        sf::Vector2f v; // velocity
+        sf::Vector2<double> x; // position
+        sf::Vector2<double> v; // velocity
         
 
         // Drawing variables

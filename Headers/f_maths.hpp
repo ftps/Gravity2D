@@ -353,6 +353,9 @@ namespace fm {
     using function_tV = std::function<T(const double&, const T&)>;
 
     template<typename T>
+    using function_V = std::function<T(const T&)>;
+
+    template<typename T>
     using endCond = std::function<const bool(const double&, const T&)>;
 
 
@@ -453,7 +456,7 @@ namespace fm {
         */
 
        template<typename T>
-       void Leapfrog(T& x, T& v, const function_tV<T>& a, const double& dt)
+       void Leapfrog(T& x, T& v, const function_V<T>& a, const double& dt)
        {
            T ax = a(x);
            x += v*dt + ax*(0.5*sq(dt));
@@ -461,7 +464,7 @@ namespace fm {
        }
 
        template<typename T>
-       void Leapfrog(T& x, T& v, const function_tV<T>& a, const double& dt, T& a2)
+       void Leapfrog(T& x, T& v, const function_V<T>& a, const double& dt, T& a2)
        {
            T ax = a2;
            x += v*dt + ax*(0.5*sq(dt));

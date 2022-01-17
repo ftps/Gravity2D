@@ -2,7 +2,7 @@
 #include <time.h>
 
 
-Body::Body()
+Body::Body(const double& mass, const double& radius) : mass(mass), radius(radius)
 {
     // Random color of body
     sf::Color color(rand() % 256,rand() % 256,rand() % 256, 255);
