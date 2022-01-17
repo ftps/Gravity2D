@@ -1,4 +1,4 @@
-#include <tracer.h>
+#include <tracer.hpp>
 #include <SFML/Graphics.hpp>
 
 
