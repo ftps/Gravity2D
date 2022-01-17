@@ -1,5 +1,5 @@
-#ifndef TRACER.HPP
-#define TRACER.HPP
+#ifndef TRACER_HPP
+#define TRACER_HPP
 
 #include <SFML/Graphics.hpp>
 #include <vector>
