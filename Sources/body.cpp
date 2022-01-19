@@ -30,15 +30,22 @@ Body::Body(const double& mass, const double& radius, const sf::Vector2<double> x
 
 Body::Body(const std::vector<double>& dataVec) : mass(dataVec.at(0)), radius(dataVec.at(1))
 {
-    
+    // Body Color
     sf::Color color(dataVec.at(6),dataVec.at(7),dataVec.at(8));
+    bodyShape.setFillColor(color);
 
+    // Position and Velocity atributes
     x.x = dataVec.at(2);
     x.y = dataVec.at(3);
+    bodyShape.setPosition(x.x,x.y);
+
     v.x = dataVec.at(4);
     v.y = dataVec.at(5);
 
-    bodyShape.setFillColor(color);
+    
+    // Set body graphical atributes
+    bodyShape.setRadius(radius);
+    bodyShape.setPointCount(radius * 30);
 
 }
 

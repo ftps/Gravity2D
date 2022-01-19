@@ -1,5 +1,5 @@
 #include <iostream>
-#include <body.hpp>
+#include <gravity2D.hpp>
 
 struct screen_atributes
 {

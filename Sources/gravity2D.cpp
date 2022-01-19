@@ -1,4 +1,5 @@
 #include "gravity2D.hpp"
+#include "f_maths.hpp"
 #include <fstream>
 
 Gravity2D::Gravity2D(const double& G) : G(G) { }
@@ -28,7 +29,7 @@ Gravity2D::Gravity2D(const std::string& filename)
 {
 
     std::fstream fs;
-    fs.open(filename, std::fstream::out);
+    fs.open(filename, std::fstream::in);
 
     if(!fs.is_open())
         std::cout<<"Unable to open file"<<"\n";

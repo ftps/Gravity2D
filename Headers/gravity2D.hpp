@@ -2,7 +2,6 @@
 #define GRAVITY2D_HPP
 
 #include "utils.hpp"
-#include "f_maths.hpp"
 #include "body.hpp"
 #include <list>
 
