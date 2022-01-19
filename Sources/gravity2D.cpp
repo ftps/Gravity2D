@@ -1,4 +1,5 @@
 #include "gravity2D.hpp"
+#include <fstream>
 
 Gravity2D::Gravity2D(const double& G) : G(G) { }
 
@@ -21,6 +22,59 @@ std::vector<double> Gravity2D::genA(const std::vector<double>& pos)
     }
 
     return a_res;
+}
+
+Gravity2D::Gravity2D(const std::string& filename)
+{
+
+    std::fstream fs;
+    fs.open(filename, std::fstream::out);
+
+    if(!fs.is_open())
+        std::cout<<"Unable to open file"<<"\n";
+
+
+    std::vector<std::vector<double>> MainVec;
+	std::vector<double> SubVec;
+	std::string sFileRow,sFileCell;
+	double dFileCell;
+	size_t commaPos;
+    
+
+    while (std::getline(fs, sFileRow)) // extract line
+	{
+        if (sFileRow.find('/') != std::string::npos)
+        {
+            continue;
+        }
+
+		while (!sFileRow.empty())
+		{
+			commaPos = sFileRow.find(",");
+
+			if (commaPos != std::string::npos)				// Process the Line
+			{
+				sFileCell = sFileRow.substr(0, commaPos);
+				sFileRow.erase(0, commaPos + 1);
+				dFileCell = std::stod(sFileCell);
+				SubVec.push_back(dFileCell);
+			}
+			else
+			{												// Process end of line ,pass to main vector, clear variables for loop
+				dFileCell = std::stod(sFileRow);
+				SubVec.push_back(dFileCell);
+				MainVec.push_back(SubVec);
+				SubVec.clear();
+				sFileRow.clear();
+			}
+		}
+	}
+
+    fs.close();
+    
+    for (size_t i = 0; i < MainVec.size(); i++)
+        bodies.emplace_back(MainVec.at(i));
+    
 }
 
 void Gravity2D::VectoSF()
