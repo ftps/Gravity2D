@@ -15,12 +15,12 @@ void Tracer::update(const sf::Shape& shape, const size_t& maxTrailSize)
 
 }
 
-sf::Vertex* Tracer::getData() 
+sf::Vertex* Tracer::getData()
 { 
     return vertexVector.data(); 
 }
 
-size_t Tracer::getSize() 
+size_t Tracer::getSize() const
 { 
     return vertexVector.size(); 
 }

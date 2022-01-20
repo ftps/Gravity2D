@@ -455,22 +455,25 @@ namespace fm {
         Function for acceleration as a function of time and position
         */
 
-       template<typename T>
-       void Leapfrog(T& x, T& v, const function_V<T>& a, const double& dt)
-       {
-           T ax = a(x);
-           x += v*dt + ax*(0.5*sq(dt));
-           v += (ax + a(x))*(0.5*dt);
-       }
+        template<typename T>
+        void Leapfrog(T& x, T& v, const function_V<T>& a, const double& dt)
+        {
+            T ax = a(x);
+            x += v*dt + ax*(0.5*sq(dt));
+            v += (ax + a(x))*(0.5*dt);
+        }
 
-       template<typename T>
-       void Leapfrog(T& x, T& v, const function_V<T>& a, const double& dt, T& a2)
-       {
-           T ax = a2;
-           x += v*dt + ax*(0.5*sq(dt));
-           a2 = a(x);
-           v += (ax + a2)*(0.5*dt);
-       }
+        //template<typename T>
+        //using function_V = std::function<T(const T&)>;
+        // std::vector<double>
+        template<typename T, typename U>
+        void Leapfrog(T& x, T& v, const U& a, const double& dt, T& a2)
+        {
+            T ax = a2;
+            x += v*dt + ax*(0.5*sq(dt));
+            a2 = a(x);
+            v += (ax + a2)*(0.5*dt);
+        }
 
 
 

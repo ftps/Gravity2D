@@ -5,20 +5,32 @@
 #include "body.hpp"
 #include <list>
 
-class Gravity2D { // meter aqui as herenças para a main window
+struct screen_atributes
+{
+    size_t screen_height = 800;
+    size_t screen_width = 800;
+    size_t modeBitsPerPixel = 32;
+
+    //screen_atributes(size_t width, size_t height):
+    //    screen_height(height), screen_width(width) {};
+
+};
+
+class Gravity2D : sf::RenderWindow { // meter aqui as herenças para a main window
     public:
-        Gravity2D(const double& G);
-        Gravity2D(const std::string& filename);
-        void main_loop();
+        Gravity2D(const std::string& filename, const screen_atributes& screen = {});
 
     private:
+        void main_loop();
         // function to generate the acceleration vector
         std::vector<double> genA(const std::vector<double>& pos);
         // function to convert between vectors
         void VectoSF();
         void SFtoVec();
+        void calcNdt();
 
-        double G; // gravitational constant
+        double G, dt_max, dt, dT;
+        int N, fps;
         // simulation variables (list em vez de vector pq quando quisermos fazer inserção/eliminação é mais eficiente)
         std::vector<Body> bodies;
         // de forma ao integrador simplético funcionar, temos de ter um vetor com todas as posições e velocidades e acelerações (ultimo para eficiencia)

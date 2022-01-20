@@ -7,6 +7,9 @@ Utility header file for lists and containers
 #include <vector>
 #include <list>
 #include <algorithm>
+#include <iostream>
+
+#define LOG std::cout << "IN LINE " << __LINE__ << " OF FILE " << __FILE__ << std::endl;
 
 
 /*
@@ -27,6 +30,18 @@ std::size_t findIn(const T& v, const U& id)
 /*
 Vector operations for math library
 */
+
+template<typename T>
+std::ostream& operator<<(std::ostream& os, const std::vector<T>& r)
+{
+    os << "[ ";
+    for(const T& t : r){
+        os << t << " ";
+    }
+    os << "]";
+    return os;
+}
+
 
 // addition
 template<typename T>

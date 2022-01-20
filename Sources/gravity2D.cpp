@@ -2,34 +2,15 @@
 #include "f_maths.hpp"
 #include <fstream>
 
-Gravity2D::Gravity2D(const double& G) : G(G) { }
 
-std::vector<double> Gravity2D::genA(const std::vector<double>& pos)
-{
-    std::vector<double> a_res(pos.size(), 0);
-    double aux;
-    fm::Vector2D as;
-
-    for(uint i = 0; i < bodies.size(); ++i){
-        for(uint j = i+1; j < bodies.size(); ++i){
-            as = {pos[2*i] - pos[2*j], pos[2*i+1] - pos[2*j+1]};
-            aux = std::pow(fm::mod2V(as), 3.0/2.0);
-            as = as*(G/aux);
-            a_res[2*i] -= as[0]*bodies[i].mass;
-            a_res[2*i+1] -= as[1]*bodies[i].mass;
-            a_res[2*j] += as[0]*bodies[j].mass;
-            a_res[2*j+1] += as[1]*bodies[j].mass;
-        }
-    }
-
-    return a_res;
-}
-
-Gravity2D::Gravity2D(const std::string& filename)
+Gravity2D::Gravity2D(const std::string& filename, const screen_atributes& screen)
+: sf::RenderWindow(sf::VideoMode(screen.screen_width, screen.screen_height, screen.modeBitsPerPixel), "Gravity 2D")
 {
 
     std::fstream fs;
     fs.open(filename, std::fstream::in);
+
+    srand(time(0)); // Seeder for random color
 
     if(!fs.is_open())
         std::cout<<"Unable to open file"<<"\n";
@@ -73,9 +54,21 @@ Gravity2D::Gravity2D(const std::string& filename)
 
     fs.close();
     
-    for (size_t i = 0; i < MainVec.size(); i++)
-        bodies.emplace_back(MainVec.at(i));
+    for (const std::vector<double>& v : MainVec){
+        if(v.size() < 9){
+            G = v.at(0);
+            dt_max = v.at(1);
+            dT = v.at(2);
+            fps = v.at(3);
+        }
+        else bodies.emplace_back(v);
+    }
     
+    SFtoVec();
+    calcNdt();
+    a = genA(x);
+
+    main_loop();
 }
 
 void Gravity2D::VectoSF()
@@ -83,15 +76,101 @@ void Gravity2D::VectoSF()
     for(uint i = 0; i < bodies.size(); ++i){
         bodies[i].x = {x[2*i], x[2*i+1]};
         bodies[i].v = {v[2*i], v[2*i+1]};
+        bodies[i].bodyShape.setPosition(bodies[i].x.x, bodies[i].x.y);
     }
 }
 
 void Gravity2D::SFtoVec()
 {
+    x.resize(2*bodies.size());
+    v.resize(2*bodies.size());
+
     for(uint i = 0; i < bodies.size(); ++i){
         x[2*i] = bodies[i].x.x;
         x[2*i+1] = bodies[i].x.y;
         v[2*i] = bodies[i].v.x;
         v[2*i+1] = bodies[i].v.y;
     }
+}
+
+void Gravity2D::calcNdt()
+{
+    double dtf = dT/fps;
+
+    N = std::ceil(dtf/dt_max);
+    dt = dtf/N;
+}
+
+std::vector<double> Gravity2D::genA(const std::vector<double>& pos)
+{
+    std::vector<double> a_res(pos.size(), 0);
+    double aux;
+    fm::Vector2D as;
+
+    for(uint i = 0; i < bodies.size(); ++i){
+        for(uint j = i+1; j < bodies.size(); ++j){
+            as = {pos[2*i] - pos[2*j], pos[2*i+1] - pos[2*j+1]};
+            aux = std::pow(fm::mod2V(as), 3.0/2.0);
+            as = as*(G/aux);
+            a_res[2*i] -= as[0]*bodies[j].mass;
+            a_res[2*i+1] -= as[1]*bodies[j].mass;
+            a_res[2*j] += as[0]*bodies[i].mass;
+            a_res[2*j+1] += as[1]*bodies[i].mass;
+        }
+    }
+
+    return a_res;
+}
+
+
+
+void Gravity2D::main_loop()
+{
+    sf::Event event;
+
+    setFramerateLimit(fps);
+
+    while(isOpen()){
+        // check all the window's events that were triggered since the last iteration of the loop
+        while (pollEvent(event)){
+
+            // "close requested" event: we close the window
+            if (event.type == sf::Event::Closed)
+                close();
+            if (event.type == sf::Event::KeyPressed)
+                if (event.key.code == sf::Keyboard::Escape)
+                    close();
+            if (event.type == sf::Event::Resized){
+                // update the view to the new size of the window
+                sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
+                setView(sf::View(visibleArea));
+            }
+            
+        }
+
+        //Update stuff
+        for(int i = 0; i < N; ++i){
+            fm::ode::Leapfrog(x, v, [this](const std::vector<double>& x){ return this->genA(x); }, dt, a);
+        }
+        VectoSF();
+        for(Body& b : bodies){
+            b.tracer.update(b.bodyShape, 300);
+        }
+
+
+    
+        // clear the window with black color
+        clear(sf::Color::Black);
+
+        // draw everything here...
+        for(Body& b : bodies){
+            draw(b.tracer.getData(), b.tracer.getSize(), sf::PrimitiveType::LineStrip);
+        }
+        for(const Body& b : bodies){
+            draw(b);
+        }
+
+        // end the current frame
+        display();
+}
 }

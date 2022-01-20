@@ -10,7 +10,7 @@ public:
 
     void update(const sf::Shape& shape,const size_t& maxTrailSize);
     sf::Vertex* getData();
-    size_t getSize(); 
+    size_t getSize() const; 
 
 private:
     //sf::Vector2f

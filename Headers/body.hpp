@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <SFML/Graphics.hpp>
+#include "tracer.hpp"
 
 class Body : public sf::Drawable, public sf::Transformable{
     public:
@@ -22,6 +23,7 @@ class Body : public sf::Drawable, public sf::Transformable{
 
         // Drawing variables
         sf::CircleShape bodyShape;
+        Tracer tracer;
 };
 
 
