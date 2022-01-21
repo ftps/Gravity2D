@@ -29,9 +29,15 @@ class Gravity2D : sf::RenderWindow { // meter aqui as herenças para a main wind
         void SFtoVec();
         void calcNdt();
 
+        // simulation parameters
         double G, dt_max, dt, dT;
         int N, fps;
-        // simulation variables (list em vez de vector pq quando quisermos fazer inserção/eliminação é mais eficiente)
+
+        // energy and momentum
+        double E;
+        sf::Vector2<double> P;
+
+        // vector with all bodies
         std::vector<Body> bodies;
         // de forma ao integrador simplético funcionar, temos de ter um vetor com todas as posições e velocidades e acelerações (ultimo para eficiencia)
         // as in, com dois corpos x = {x1,y1,x2,y2}; v = {vx1,vy1, vx2, vy2}; etc...
@@ -41,5 +47,18 @@ class Gravity2D : sf::RenderWindow { // meter aqui as herenças para a main wind
         void zoomWorld(const sf::Event& event);
 
 };
+
+template<typename T>
+T operator*(const sf::Vector2<T>& l, const sf::Vector2<T>& r)
+{
+    return l.x*r.x + l.y*r.y;
+}
+
+template<typename T>
+std::ostream& operator<<(std::ostream& os, const sf::Vector2<T>& r)
+{
+    os << "[ " << r.x << " " << r.y << " ]";
+    return os;
+}
 
 #endif

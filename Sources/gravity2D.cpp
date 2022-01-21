@@ -73,12 +73,17 @@ Gravity2D::Gravity2D(const std::string& filename, const screen_atributes& screen
 
 void Gravity2D::VectoSF()
 {
+    P = {0,0};
+
     for(uint i = 0; i < bodies.size(); ++i){
         bodies[i].x = {x[2*i], x[2*i+1]};
         bodies[i].v = {v[2*i], v[2*i+1]};
         bodies[i].bodyShape.setPosition(bodies[i].x.x - bodies[i].radius, bodies[i].x.y - bodies[i].radius);
+    
+        // Energy and momentum
+        E += 0.5*bodies[i].mass*(bodies[i].v*bodies[i].v);
+        P += bodies[i].v*bodies[i].mass;
     }
-
 }
 
 void Gravity2D::SFtoVec()
@@ -108,10 +113,14 @@ std::vector<double> Gravity2D::genA(const std::vector<double>& pos)
     double aux;
     fm::Vector2D as;
 
+    E = 0;
+
     for(uint i = 0; i < bodies.size(); ++i){
         for(uint j = i+1; j < bodies.size(); ++j){
             as = {pos[2*i] - pos[2*j], pos[2*i+1] - pos[2*j+1]};
-            aux = std::pow(fm::mod2V(as), 3.0/2.0);
+            aux = fm::modV(as);
+            E -= G*bodies[i].mass*bodies[j].mass/aux;
+            aux = std::pow(aux, 3.0);
             as = as*(G/aux);
             a_res[2*i] -= as[0]*bodies[j].mass;
             a_res[2*i+1] -= as[1]*bodies[j].mass;
@@ -215,6 +224,8 @@ void Gravity2D::main_loop()
         for(Body& b : bodies){
             b.tracer.update(b.bodyShape, 300);
         }
+        std::cout << "Energy: " << E << "\n";
+        std::cout << "Momentum: " << P << "\n" << std::endl;
 
 
         // clear the window with black color
