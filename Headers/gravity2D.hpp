@@ -36,6 +36,10 @@ class Gravity2D : sf::RenderWindow { // meter aqui as herenças para a main wind
         // de forma ao integrador simplético funcionar, temos de ter um vetor com todas as posições e velocidades e acelerações (ultimo para eficiencia)
         // as in, com dois corpos x = {x1,y1,x2,y2}; v = {vx1,vy1, vx2, vy2}; etc...
         std::vector<double> x, v, a;
+
+        void moveWorld(const sf::Event& event, bool& dragging,sf::Vector2i& previous_mouse_position);
+        void zoomWorld(const sf::Event& event);
+
 };
 
 #endif

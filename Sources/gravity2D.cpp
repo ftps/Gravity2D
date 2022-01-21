@@ -67,7 +67,7 @@ Gravity2D::Gravity2D(const std::string& filename, const screen_atributes& screen
     SFtoVec();
     calcNdt();
     a = genA(x);
-
+    
     main_loop();
 }
 
@@ -76,8 +76,9 @@ void Gravity2D::VectoSF()
     for(uint i = 0; i < bodies.size(); ++i){
         bodies[i].x = {x[2*i], x[2*i+1]};
         bodies[i].v = {v[2*i], v[2*i+1]};
-        bodies[i].bodyShape.setPosition(bodies[i].x.x, bodies[i].x.y);
+        bodies[i].bodyShape.setPosition(bodies[i].x.x - bodies[i].radius, bodies[i].x.y - bodies[i].radius);
     }
+
 }
 
 void Gravity2D::SFtoVec()
@@ -122,30 +123,88 @@ std::vector<double> Gravity2D::genA(const std::vector<double>& pos)
     return a_res;
 }
 
+void Gravity2D::moveWorld(const sf::Event& event, bool& dragging, sf::Vector2i& previous_mouse_position)
+{
+    
+    if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
+    {
+        dragging = true;
+    }
+    if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left)
+    {
+        dragging = false;
+    }
+    if (event.type == sf::Event::MouseMoved)
+    {
+        sf::Vector2i startPan = {event.mouseMove.x,event.mouseMove.y};
+
+        if(dragging)
+        {   
+            sf::Vector2f delta = mapPixelToCoords(startPan) - mapPixelToCoords(previous_mouse_position);
+                    
+            // apply negatively to view
+            sf::View view = getView();
+            view.move(-delta);
+            setView(view);     
+        }
+
+        // update previous mouse position
+        previous_mouse_position = startPan;
+    }
+
+}
+
+void Gravity2D::zoomWorld(const sf::Event& event)
+{
+    sf::View view;
+
+    if (event.type == sf::Event::MouseWheelScrolled || (event.type == sf::Event::KeyPressed && (event.key.code == sf::Keyboard::Q || event.key.code == sf::Keyboard::A)))
+    {
+        if(event.mouseWheelScroll.delta > 0 || event.key.code == sf::Keyboard::Q)
+        {
+            view = getView();
+            view.zoom(0.95f);
+            setView(view);
+        }
+        else if(event.mouseWheelScroll.delta < 0 || event.key.code == sf::Keyboard::A)
+        {
+            view = getView();
+            view.zoom(1.05f);
+            setView(view);
+        }
+    }
+}
+
 
 
 void Gravity2D::main_loop()
 {
     sf::Event event;
+    bool dragging = false;
+    sf::Vector2i previous_mouse_position;    
+
 
     setFramerateLimit(fps);
 
     while(isOpen()){
         // check all the window's events that were triggered since the last iteration of the loop
         while (pollEvent(event)){
-
             // "close requested" event: we close the window
             if (event.type == sf::Event::Closed)
                 close();
             if (event.type == sf::Event::KeyPressed)
                 if (event.key.code == sf::Keyboard::Escape)
                     close();
+            if (event.type == sf::Event::KeyPressed)
+                if (event.key.code == sf::Keyboard::Q)
+                    //close();
             if (event.type == sf::Event::Resized){
                 // update the view to the new size of the window
                 sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
                 setView(sf::View(visibleArea));
             }
-            
+            moveWorld(event,dragging,previous_mouse_position);
+            zoomWorld(event);
         }
 
         //Update stuff
@@ -158,7 +217,6 @@ void Gravity2D::main_loop()
         }
 
 
-    
         // clear the window with black color
         clear(sf::Color::Black);
 
@@ -172,5 +230,5 @@ void Gravity2D::main_loop()
 
         // end the current frame
         display();
-}
+    }
 }
