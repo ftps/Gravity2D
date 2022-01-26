@@ -43,8 +43,14 @@ class Gravity2D : sf::RenderWindow { // meter aqui as herenças para a main wind
         // as in, com dois corpos x = {x1,y1,x2,y2}; v = {vx1,vy1, vx2, vy2}; etc...
         std::vector<double> x, v, a;
 
+        // pan and zoom
         void moveWorld(const sf::Event& event, bool& dragging,sf::Vector2i& previous_mouse_position);
         void zoomWorld(const sf::Event& event);
+        void speedWorld(const sf::Event& event);
+
+        // collision detection
+        void simpleCol();
+        void collideElastic(Body& l, Body& r);
 
 };
 

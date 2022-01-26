@@ -184,6 +184,59 @@ void Gravity2D::zoomWorld(const sf::Event& event)
     }
 }
 
+void Gravity2D::speedWorld(const sf::Event& event)
+{
+    if(event.type == sf::Event::KeyPressed){
+        if(event.key.code == sf::Keyboard::Period){
+            N *= 1.5;
+            //calcNdt();
+        }
+        else if(event.key.code == sf::Keyboard::Dash){
+            N /= 1.5;
+            //calcNdt();
+        }
+    }
+}
+
+void Gravity2D::simpleCol()
+{
+    sf::Vector2<double> aux;
+
+    for(uint i = 0; i < bodies.size()-1; ++i){
+        for(uint j = i+1; j < bodies.size(); ++j){
+            aux = bodies[j].x - bodies[i].x;
+            if(fm::sq(bodies[i].radius + bodies[j].radius) > aux*aux && (bodies[j].v - bodies[i].v)*aux < 0){
+                collideElastic(bodies[i], bodies[j]);
+                v[2*i] = bodies[i].v.x;
+                v[2*i+1] = bodies[i].v.y;
+                v[2*j] = bodies[j].v.x;
+                v[2*j+1] = bodies[j].v.y;
+            }
+        }
+    }
+}
+
+void Gravity2D::collideElastic(Body& l, Body& r)
+{
+    sf::Vector2<double> aux;
+    double aux_d;
+
+    aux = l.x - r.x;
+    aux_d = (aux*(l.v-r.v))/(aux*aux);
+    l.v = l.v - aux*((2*r.mass/(l.mass+r.mass))*aux_d);
+    r.v = r.v + aux*((2*l.mass/(l.mass+r.mass))*aux_d);
+}
+
+
+
+
+
+
+
+
+
+
+
 
 
 void Gravity2D::main_loop()
@@ -214,10 +267,12 @@ void Gravity2D::main_loop()
             }
             moveWorld(event,dragging,previous_mouse_position);
             zoomWorld(event);
+            speedWorld(event);
         }
 
         //Update stuff
         for(int i = 0; i < N; ++i){
+            simpleCol();
             fm::ode::Leapfrog(x, v, [this](const std::vector<double>& x){ return this->genA(x); }, dt, a);
         }
         VectoSF();
